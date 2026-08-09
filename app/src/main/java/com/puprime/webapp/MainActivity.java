@@ -1,6 +1,7 @@
 package com.puprime.webapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -9,10 +10,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
+public class MainActivity extends Activity {
 
-public class MainActivity extends AppCompatActivity {
     private static final String START_URL =
             "https://puvip.co/la-partners/id/jtIzD5o6";
 
@@ -27,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
+
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         settings.setUseWideViewPort(false);
 
         CookieManager.getInstance().setAcceptCookie(true);
-        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        CookieManager.getInstance()
+                .setAcceptThirdPartyCookies(webView, true);
 
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
@@ -48,18 +49,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             webView.restoreState(savedInstanceState);
         }
+    }
 
-        getOnBackPressedDispatcher().addCallback(this,
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        if (webView.canGoBack()) {
-                            webView.goBack();
-                        } else {
-                            finish();
-                        }
-                    }
-                });
+    @Override
+    public void onBackPressed() {
+        if (webView != null && webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
